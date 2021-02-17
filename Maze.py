@@ -95,7 +95,7 @@ def reachable(maze: list, start: tuple, goal: tuple):
 def BFS(maze: list, start: tuple, goal: tuple):
     """ 
     Determines the shortest path (if it exists) between
-    a start square and an end square using BFS.
+    a start square and an end square using BFS (dijkstra's).
 
     maze - a square 2D array
     start - an ordered pair of the indices representing the start square
@@ -118,9 +118,14 @@ def BFS(maze: list, start: tuple, goal: tuple):
 
     visited = copy.deepcopy(maze) # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
     # visited = list(map(list, maze)) # Alternative to using copy.deepcopy
+
+    distance = [[float('inf') for i in range(n)] for j in range(n)] # Initialize a matrix of the same size as maze where each value is infinity.
+    previous = [[None for i in range(n)] for j in range(n)] # Initialize a matrix of the same size as maze where each value is None.
+
     queue = deque() # Define our queue of "fringe" squares
     queue.append(start) # Push the start square into our queue
     visited[start[0]][start[1]] = 1 # Set our start to visited
+    distance[start[0]][start[1]] = 0 # Set our start distance to 0
 
     while (len(queue)): # While there exists items in the queue
         current = queue.popleft() # Pop the square at index 0
