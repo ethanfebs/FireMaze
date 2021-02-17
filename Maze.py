@@ -172,11 +172,16 @@ def reachable(maze: list, start: tuple, goal: tuple):
 def BFS(maze: list, start: tuple, goal: tuple):
     """ 
     Determines the shortest path (if it exists) between
-    a start square and an end square using BFS.
+    a start square and an end square using BFS (dijkstra's).
 
     maze - a square 2D array
     start - an ordered pair of the indices representing the start square
     goal - an ordered pair of the indices representing the goal square
+
+    returns - an ordered pair, with the first element either True or False, 
+              representing whether or not it is possible to form a path. 
+              The second element is a list of ordered pairs representing 
+              (one of) the shortest path(s).
     """
     n = len(maze) # Get the dimension of the maze
 
@@ -195,6 +200,9 @@ def BFS(maze: list, start: tuple, goal: tuple):
 
     visited = copy.deepcopy(maze) # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
     # visited = list(map(list, maze)) # Alternative to using copy.deepcopy
+
+    previous = [[None for i in range(n)] for j in range(n)] # Initialize a matrix of the same size as maze where each value is None.
+
     queue = deque() # Define our queue of "fringe" squares
     queue.append(start) # Push the start square into our queue
     visited[start[0]][start[1]] = 1 # Set our start to visited
@@ -202,8 +210,14 @@ def BFS(maze: list, start: tuple, goal: tuple):
     while (len(queue)): # While there exists items in the queue
         current = queue.popleft() # Pop the square at index 0
 
-        if (current == goal):
-            return True  # If current is the goal, we found it!
+        if (current == goal): # If current is the goal, we found it!
+            # We now want to traverse back to make a path using our 'previous' matrix
+            path = []
+            while (current != None):
+                path.append(current)
+                current = previous[current[0]][current[1]]
+            path.reverse()
+            return (True, path)
 
         current_i, current_j = current  # Unpack the current pair
         # If this square has not been visited yet
@@ -218,14 +232,15 @@ def BFS(maze: list, start: tuple, goal: tuple):
             possible = (current_i + offset_i, current_j + offset_j)
             # print(f"Current possible: {possible_i} {possible_j}") # DEBUG
             if (is_valid(possible, n)): # If the calculated square is within the maze matrix
-                if (not visited[possible[0]][possible[1]]):
-                    queue.append(possible)
-                    visited[possible[0]][possible[1]] = 1
-    return False # If the while loop goes out, and the queue is empty, then there is no possible path
+                if (not visited[possible[0]][possible[1]]): # If possible has not been visited yet
+                    queue.append(possible) # Add possible to our queue
+                    visited[possible[0]][possible[1]] = 1 # Set possible to visited
+                    previous[possible[0]][possible[1]] = current # Set the previous square for possible to the current square
+    return (False, []) # If the while loop goes out, and the queue is empty, then there is no possible path
 
 maze = gen_fire_maze(6, 0.3)
 print_maze(maze)
-#print(reachable(maze, (0, 0), (5, 5)))
+print(BFS(maze, (0, 0), (5, 5)))
 
 for i in range(10):
     maze = advance_fire_one_step(maze, 0.5)
