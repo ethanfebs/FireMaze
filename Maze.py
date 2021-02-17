@@ -64,11 +64,12 @@ def reachable(maze: list, start: tuple, goal: tuple):
         print("reachable: Goal indices outside maze dimensions")
         return False
 
-    if (maze[start_i][start_j] == 1):
-        print("reachable: Start square is an obstacle")
-        return False
-    elif (maze[goal_i][goal_j] == 1):
-        print("reachable: Goal square is an obstacle")
+    # These data checks should no longer be needed because of changes made in gen_maze
+    # if (maze[start_i][start_j] == 1):
+    #     print("reachable: Start square is an obstacle")
+    #     return False
+    # elif (maze[goal_i][goal_j] == 1):
+    #     print("reachable: Goal square is an obstacle")
         return False
 
     # End data checking statements
@@ -99,6 +100,66 @@ def reachable(maze: list, start: tuple, goal: tuple):
                     stack.append((possible_i, possible_j))
     return False # If the while loop goes out, and the stack is empty, then there is no possible path
             
+
+def BFS(maze: list, start: tuple, goal: tuple):
+    """ 
+    Determines the shortest path (if it exists) between
+    a start square and an end square using BFS.
+
+    maze - a square 2D array
+    start - an ordered pair of the indices representing the start square
+    goal - an ordered pair of the indices representing the goal square
+    """
+    start_i, start_j = start # Unpack tuple for data checking
+    goal_i, goal_j = goal # Unpack tuple for data checking
+    n = len(maze) # Get the dimension of the maze
+
+    #========================================#
+    # Some data checking statements
+
+    if (not is_valid(start, n)):
+        print("reachable: Start indices outside maze dimensions")
+        return False
+    elif (not is_valid(goal, n)):
+        print("reachable: Goal indices outside maze dimensions")
+        return False
+
+    # These data checks should no longer be needed because of changes made in gen_maze
+    # if (maze[start_i][start_j] == 1):
+    #     print("reachable: Start square is an obstacle")
+    #     return False
+    # elif (maze[goal_i][goal_j] == 1):
+    #     print("reachable: Goal square is an obstacle")
+    #     return False
+
+    # End data checking statements
+    #========================================#
+
+    visited = maze.copy() # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
+    stack = [] # Define our stack of "fringe" squares
+    stack.append(start) # Push the start square onto our queue
+
+    while (len(stack)): # While there exists items in the stack
+        current = stack.pop() # Pop the last element
+
+        if (current == goal):
+            return True # If current is the goal, we found it!
+
+        current_i, current_j = current # Unpack the current pair
+        if (visited[current_i][current_j] == False): # If this square has not been visited yet
+            visited[current_i][current_j] = True # Set this square to visited
+        
+        # Now we want to add all unvisited squares that are possible to get to from the current square
+        for i in range(len(nearby_offsets)):
+            offset_i, offset_j = nearby_offsets[i]
+            possible_i = current_i + offset_i 
+            possible_j = current_j + offset_j
+            # print(f"Current possible: {possible_i} {possible_j}") # DEBUG
+            if (is_valid((possible_i, possible_j), n)): # If the calculated square is within the maze matrix
+                if (not visited[possible_i][possible_j]):
+                    stack.append((possible_i, possible_j))
+    return False # If the while loop goes out, and the stack is empty, then there is no possible path
+
 maze = gen_maze(6, 0.3)
 print_maze(maze)
 print(reachable(maze, (0, 0), (5, 5)))
