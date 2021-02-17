@@ -71,6 +71,47 @@ def gen_fire_maze(dim, p):
     return -1
 
 
+def advance_fire_one_step(maze, q):
+    """ 
+    Spread fire through maze using the following criteria
+        1. cells on fire stay on fire
+        2. empty cells with no adjacent cells on fire stay empty
+        3. blocked cells cannot be set on fire
+        4. empty cells with k adjacent cells on fire are set on fire with probability 1-(1-q)^k
+    """
+
+    n = len(maze)  # get dimension of maze
+    next_maze = maze.copy()  # create a copy of previous maze
+
+    # iterate over all cells in the maze
+    for i in range(n):
+        for j in range(n):
+            # check if cell is empty
+            if(next_maze[i][j] == 0):
+                k = 0
+                # count number of adjacent cells that are on fire
+                for x in range(len(nearby_offsets)):
+                    offset_i, offset_j = nearby_offsets[x]
+                    possible = (i + offset_i, j + offset_j)
+
+                    if(is_valid(possible, n) and next_maze[possible[0]][possible[1]] == 2):
+                        k += 1
+                # use random variable to determine whether cells should be set on fire
+                if(random.uniform(0, 1) < 1-((1-q) ** k)):
+                    # represent cell to be set on fire differently than fire cell to avoid affecting future calculations
+                    next_maze[i][j] = 3
+
+    # iterate over all cells in the maze
+    for i in range(n):
+        for j in range(n):
+            # if cell should be set on fire, set it on fire
+            if(next_maze[i][j] == 3):
+                next_maze[i][j] = 2
+
+    # return maze with fire advanced on step
+    return next_maze
+
+
 def reachable(maze: list, start: tuple, goal: tuple):
     """ 
     Determines whether or not there exists a path 
@@ -185,4 +226,9 @@ def BFS(maze: list, start: tuple, goal: tuple):
 
 maze = gen_fire_maze(6, 0.3)
 print_maze(maze)
-print(reachable(maze, (0, 0), (5, 5)))
+#print(reachable(maze, (0, 0), (5, 5)))
+
+for i in range(10):
+    maze = advance_fire_one_step(maze, 0.5)
+    print("ITERATION ", i)
+    print_maze(maze)
