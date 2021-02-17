@@ -92,15 +92,13 @@ def reachable(maze: list, start: tuple, goal: tuple):
         # Now we want to add all unvisited squares that are possible to get to from the current square
         for i in range(len(nearby_offsets)):
             offset_i, offset_j = nearby_offsets[i]
-            possible_i = current_i + offset_i 
-            possible_j = current_j + offset_j
+            possible = (current_i + offset_i, current_j + offset_j)
             # print(f"Current possible: {possible_i} {possible_j}") # DEBUG
-            if (is_valid((possible_i, possible_j), n)): # If the calculated square is within the maze matrix
-                if (not visited[possible_i][possible_j]):
-                    stack.append((possible_i, possible_j))
+            if (is_valid(possible, n)): # If the calculated square is within the maze matrix
+                if (not visited[possible[0]][possible[1]]):
+                    stack.append(possible)
     return False # If the while loop goes out, and the stack is empty, then there is no possible path
             
-
 def BFS(maze: list, start: tuple, goal: tuple):
     """ 
     Determines the shortest path (if it exists) between
