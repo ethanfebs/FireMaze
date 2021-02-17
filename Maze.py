@@ -1,4 +1,6 @@
 import random
+import copy # Allows us to deep copy a 2D array
+from collections import deque # Importing a simple queue since pop(0) on a list is O(n) time where n is the size of the list
 
 # These offsets allow us to define all squares that potentially can be reached from a 'current' square
 nearby_offsets = [(-1, 0), (0, 1), (1, 0), (0, -1)]
@@ -136,9 +138,11 @@ def reachable(maze: list, start: tuple, goal: tuple):
     # End data checking statements
     #========================================#
 
-    visited = maze.copy()  # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
-    stack = []  # Define our stack of "fringe" squares
-    stack.append(start)  # Push the start square onto our queue
+    visited = copy.deepcopy(maze) # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
+    # visited = list(map(list, maze)) # Alternative to using copy.deepcopy
+    stack = [] # Define our stack of "fringe" squares
+    stack.append(start) # Push the start square onto our stack
+    visited[start[0]][start[1]] = 1 # Set our start to visited
 
     while (len(stack)):  # While there exists items in the stack
         current = stack.pop()  # Pop the last element
@@ -151,6 +155,9 @@ def reachable(maze: list, start: tuple, goal: tuple):
         if (visited[current_i][current_j] == False):
             visited[current_i][current_j] = True  # Set this square to visited
 
+
+        current_i, current_j = current # Unpack the current pair
+        
         # Now we want to add all unvisited squares that are possible to get to from the current square
         for i in range(len(nearby_offsets)):
             offset_i, offset_j = nearby_offsets[i]
@@ -159,9 +166,9 @@ def reachable(maze: list, start: tuple, goal: tuple):
             if (is_valid(possible, n)):  # If the calculated square is within the maze matrix
                 if (not visited[possible[0]][possible[1]]):
                     stack.append(possible)
-    return False  # If the while loop goes out, and the stack is empty, then there is no possible path
-
-
+                    visited[possible[0]][possible[1]] = 1
+    return False # If the while loop goes out, and the stack is empty, then there is no possible path
+            
 def BFS(maze: list, start: tuple, goal: tuple):
     """ 
     Determines the shortest path (if it exists) between
@@ -171,9 +178,7 @@ def BFS(maze: list, start: tuple, goal: tuple):
     start - an ordered pair of the indices representing the start square
     goal - an ordered pair of the indices representing the goal square
     """
-    start_i, start_j = start  # Unpack tuple for data checking
-    goal_i, goal_j = goal  # Unpack tuple for data checking
-    n = len(maze)  # Get the dimension of the maze
+    n = len(maze) # Get the dimension of the maze
 
     #========================================#
     # Some data checking statements
@@ -185,23 +190,17 @@ def BFS(maze: list, start: tuple, goal: tuple):
         print("reachable: Goal indices outside maze dimensions")
         return False
 
-    # These data checks should no longer be needed because of changes made in gen_maze
-    # if (maze[start_i][start_j] == 1):
-    #     print("reachable: Start square is an obstacle")
-    #     return False
-    # elif (maze[goal_i][goal_j] == 1):
-    #     print("reachable: Goal square is an obstacle")
-    #     return False
-
     # End data checking statements
     #========================================#
 
-    visited = maze.copy()  # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
-    stack = []  # Define our stack of "fringe" squares
-    stack.append(start)  # Push the start square onto our queue
+    visited = copy.deepcopy(maze) # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
+    # visited = list(map(list, maze)) # Alternative to using copy.deepcopy
+    queue = deque() # Define our queue of "fringe" squares
+    queue.append(start) # Push the start square into our queue
+    visited[start[0]][start[1]] = 1 # Set our start to visited
 
-    while (len(stack)):  # While there exists items in the stack
-        current = stack.pop()  # Pop the last element
+    while (len(queue)): # While there exists items in the queue
+        current = queue.popleft() # Pop the square at index 0
 
         if (current == goal):
             return True  # If current is the goal, we found it!
@@ -211,18 +210,18 @@ def BFS(maze: list, start: tuple, goal: tuple):
         if (visited[current_i][current_j] == False):
             visited[current_i][current_j] = True  # Set this square to visited
 
+        current_i, current_j = current # Unpack the current pair
+        
         # Now we want to add all unvisited squares that are possible to get to from the current square
         for i in range(len(nearby_offsets)):
             offset_i, offset_j = nearby_offsets[i]
-            possible_i = current_i + offset_i
-            possible_j = current_j + offset_j
+            possible = (current_i + offset_i, current_j + offset_j)
             # print(f"Current possible: {possible_i} {possible_j}") # DEBUG
-            # If the calculated square is within the maze matrix
-            if (is_valid((possible_i, possible_j), n)):
-                if (not visited[possible_i][possible_j]):
-                    stack.append((possible_i, possible_j))
-    return False  # If the while loop goes out, and the stack is empty, then there is no possible path
-
+            if (is_valid(possible, n)): # If the calculated square is within the maze matrix
+                if (not visited[possible[0]][possible[1]]):
+                    queue.append(possible)
+                    visited[possible[0]][possible[1]] = 1
+    return False # If the while loop goes out, and the queue is empty, then there is no possible path
 
 maze = gen_fire_maze(6, 0.3)
 print_maze(maze)
