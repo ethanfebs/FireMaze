@@ -50,8 +50,6 @@ def reachable(maze: list, start: tuple, goal: tuple):
     start - an ordered pair of the indices representing the start square
     goal - an ordered pair of the indices representing the goal square
     """
-    start_i, start_j = start # Unpack tuple for data checking
-    goal_i, goal_j = goal # Unpack tuple for data checking
     n = len(maze) # Get the dimension of the maze
 
     #========================================#
@@ -62,13 +60,6 @@ def reachable(maze: list, start: tuple, goal: tuple):
         return False
     elif (not is_valid(goal, n)):
         print("reachable: Goal indices outside maze dimensions")
-        return False
-
-    if (maze[start_i][start_j] == 1):
-        print("reachable: Start square is an obstacle")
-        return False
-    elif (maze[goal_i][goal_j] == 1):
-        print("reachable: Goal square is an obstacle")
         return False
 
     # End data checking statements
