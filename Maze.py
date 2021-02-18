@@ -28,9 +28,9 @@ def euclidean_distance(square_one: tuple, square_two: tuple):
     """
     return math.sqrt((square_one[0] - square_two[0]) ** 2 + (square_one[1] - square_two[1]) ** 2)
 
-def largest_maze_size(search_algo, maze_size: int = 2):
+def search_time(search_algo, maze_size: int = 2):
     """
-    Find the largest maze size that can be 'solved' in the given seconds.
+    Returns the search time it takes for a given algorithm to find a valid path for a given maze size.
 
     search_algo - the search algorithm
 
