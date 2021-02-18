@@ -82,9 +82,10 @@ def gen_maze(dim, p):
     return maze
 
 
-def gen_fire_maze(dim, p):
+def gen_fire_maze(maze):
     """Generate a maze with one empty cell on fire"""
-    maze_f = gen_maze(dim, p)
+    maze_f = copy.deepcopy(maze)
+    dim = len(maze)
     num_empty = 0
 
     # count the number of empty cells in the maze
@@ -108,7 +109,7 @@ def gen_fire_maze(dim, p):
 
 
 def advance_fire_one_step(maze, q):
-    """ 
+    """
     Spread fire through maze using the following criteria
         1. cells on fire stay on fire
         2. empty cells with no adjacent cells on fire stay empty
@@ -117,7 +118,7 @@ def advance_fire_one_step(maze, q):
     """
 
     n = len(maze)  # get dimension of maze
-    next_maze = maze.copy()  # create a copy of previous maze
+    next_maze = copy.deepcopy(maze)  # create a copy of previous maze
 
     # iterate over all cells in the maze
     for i in range(n):
@@ -149,8 +150,8 @@ def advance_fire_one_step(maze, q):
 
 
 def reachable(maze: list, start: tuple, goal: tuple):
-    """ 
-    Determines whether or not there exists a path 
+    """
+    Determines whether or not there exists a path
     between the start square and the goal square.
 
     maze - a square 2D array
@@ -172,11 +173,12 @@ def reachable(maze: list, start: tuple, goal: tuple):
     # End data checking statements
     #========================================#
 
-    visited = copy.deepcopy(maze) # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
+    # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
+    visited = copy.deepcopy(maze)
     # visited = list(map(list, maze)) # Alternative to using copy.deepcopy
-    stack = [] # Define our stack of "fringe" squares
-    stack.append(start) # Push the start square onto our stack
-    visited[start[0]][start[1]] = 1 # Set our start to visited
+    stack = []  # Define our stack of "fringe" squares
+    stack.append(start)  # Push the start square onto our stack
+    visited[start[0]][start[1]] = 1  # Set our start to visited
 
     while (len(stack)):  # While there exists items in the stack
         current = stack.pop()  # Pop the last element
@@ -185,7 +187,7 @@ def reachable(maze: list, start: tuple, goal: tuple):
             return True  # If current is the goal, we found it!
 
         current_i, current_j = current  # Unpack the current pair
-        
+
         # Now we want to add all unvisited squares that are possible to get to from the current square
         for i in range(len(nearby_offsets)):
             offset_i, offset_j = nearby_offsets[i]
@@ -195,10 +197,11 @@ def reachable(maze: list, start: tuple, goal: tuple):
                 if (not visited[possible[0]][possible[1]]):
                     stack.append(possible)
                     visited[possible[0]][possible[1]] = 1
-    return False # If the while loop goes out, and the stack is empty, then there is no possible path
-            
+    return False  # If the while loop goes out, and the stack is empty, then there is no possible path
+
+
 def BFS(maze: list, start: tuple, goal: tuple):
-    """ 
+    """
     Determines the shortest path (if it exists) between
     a start square and an end square using BFS (dijkstra's).
 
@@ -212,7 +215,7 @@ def BFS(maze: list, start: tuple, goal: tuple):
               (one of) the shortest path(s).
               The third element is the number of nodes visited.
     """
-    n = len(maze) # Get the dimension of the maze
+    n = len(maze)  # Get the dimension of the maze
 
     #========================================#
     # Some data checking statements
@@ -231,17 +234,18 @@ def BFS(maze: list, start: tuple, goal: tuple):
     visited = copy.deepcopy(maze) # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
     # visited = list(map(list, maze)) # Alternative to using copy.deepcopy
 
-    previous = [[None for i in range(n)] for j in range(n)] # Initialize a matrix of the same size as maze where each value is None.
+    # Initialize a matrix of the same size as maze where each value is None.
+    previous = [[None for i in range(n)] for j in range(n)]
 
-    queue = deque() # Define our queue of "fringe" squares
-    queue.append(start) # Push the start square into our queue
-    visited[start[0]][start[1]] = 1 # Set our start to visited
+    queue = deque()  # Define our queue of "fringe" squares
+    queue.append(start)  # Push the start square into our queue
+    visited[start[0]][start[1]] = 1  # Set our start to visited
 
     while (len(queue)): # While there exists items in the queue
         current = queue.popleft() # Pop the square at index 0
         number_of_nodes_visited += 1 # Increase number of nodes visited
 
-        if (current == goal): # If current is the goal, we found it!
+        if (current == goal):  # If current is the goal, we found it!
             # We now want to traverse back to make a path using our 'previous' matrix
             path = []
             while (current != None):
@@ -257,12 +261,110 @@ def BFS(maze: list, start: tuple, goal: tuple):
             offset_i, offset_j = nearby_offsets[i]
             possible = (current_i + offset_i, current_j + offset_j)
             # print(f"Current possible: {possible_i} {possible_j}") # DEBUG
-            if (is_valid(possible, n)): # If the calculated square is within the maze matrix
-                if (not visited[possible[0]][possible[1]]): # If possible has not been visited yet
-                    queue.append(possible) # Add possible to our queue
-                    visited[possible[0]][possible[1]] = 1 # Set possible to visited
-                    previous[possible[0]][possible[1]] = current # Set the previous square for possible to the current square
-    return (False, [], number_of_nodes_visited) # If the while loop goes out, and the queue is empty, then there is no possible path
+            if (is_valid(possible, n)):  # If the calculated square is within the maze matrix
+                # If possible has not been visited yet
+                if (not visited[possible[0]][possible[1]]):
+                    queue.append(possible)  # Add possible to our queue
+                    # Set possible to visited
+                    visited[possible[0]][possible[1]] = 1
+                    # Set the previous square for possible to the current square
+                    previous[possible[0]][possible[1]] = current
+    # If the while loop goes out, and the queue is empty, then there is no possible path
+    return (False, [])
+
+
+def fire_strategy_1(maze, q):
+    """
+    Calculate the shortest path through a fire maze before any fire has spread
+    Progress agent through maze as fire spreads
+    Return false if agent touches fire cell on path
+    Returns true otherwise
+    """
+
+    n = len(maze)
+    path = BFS(maze, (0, 0), (n-1, n-1))
+
+    # End if no path exists from start to goal
+    if(not path[0]):
+        return False
+
+    route = path[1]
+
+    timestep = 0
+    agent_pos = route[timestep]
+    maze_f = copy.deepcopy(maze)
+
+    while(timestep < len(route)):
+
+        timestep += 1  # increase timer by 1
+        agent_pos = route[timestep]  # update to new position
+
+        # if agent moves into fire, report failure
+        if(maze_f[agent_pos[0]][agent_pos[1]] != 0):
+            # print_maze(maze_f)
+            #print("timestep ", timestep)
+            return False
+
+        # if agent has reached goal, report success
+        if(timestep == len(route)-1):
+            # print_maze(maze_f)
+            #print("timestep ", timestep)
+            return True
+
+        maze_f = advance_fire_one_step(maze_f, q)  # advance fire
+
+        # if fire spread into agent, report failure
+        if(maze_f[agent_pos[0]][agent_pos[1]] != 0):
+            # print_maze(maze_f)
+            #print("timestep ", timestep)
+            return False
+
+    # function should always return before while loop is completed
+    return False
+
+
+def fire_strategy_2(maze, q):
+    """
+    Recalculate the shortest path through the fire at each timestep
+    Return false if agent touches fire cell on path
+    Returns true otherwise
+    """
+
+    n = len(maze)
+
+    timestep = 0
+    maze_f = copy.deepcopy(maze)
+    agent_pos = (0, 0)
+
+    while(agent_pos != (n-1, n-1)):
+
+        path = BFS(maze_f, agent_pos, (n-1, n-1))
+
+        # End if no path exists from start to goal
+        if(not path[0]):
+            return False
+
+        route = path[1]
+        timestep += 1  # increase timer by 1
+        agent_pos = route[1]  # update to new position
+
+        # if agent moves into fire, report failure
+        if(maze_f[agent_pos[0]][agent_pos[1]] != 0):
+            return False
+
+        # if agent has reached goal, report success
+        if(agent_pos == (n-1, n-1)):
+            return True
+
+        maze_f = advance_fire_one_step(maze_f, q)  # advance fire
+
+        # if fire spread into agent, report failure
+        if(maze_f[agent_pos[0]][agent_pos[1]] != 0):
+            return False
+
+    # function should always return before while loop is completed
+    return False
+
 
 def AStar(maze: list, start: tuple, goal: tuple):
     """ 
@@ -360,20 +462,23 @@ def AStar(maze: list, start: tuple, goal: tuple):
     return (False, [], number_of_nodes_visited) # If the while loop goes out, and the queue is empty, then there is no possible path
 
 if __name__ == "__main__":
-    # n = 19
-    # maze = gen_fire_maze(n + 1, 0.3)
-    # print(maze)
-    # print_maze(maze)
-    # print(reachable(maze, (0, 0), (n, n)))
-    # BFS_blah, BFS_result, BFS_number_of_nodes_visited = BFS(maze, (0, 0), (n, n))
-    # AStar_blah, AStar_result, AStar_number_of_nodes_visited = AStar(maze, (0, 0), (n, n))
+    n = 19
+    maze = gen_fire_maze(n + 1, 0.3)
+    print(maze)
+    print_maze(maze)
+    print(reachable(maze, (0, 0), (n, n)))
+    BFS_blah, BFS_result, BFS_number_of_nodes_visited = BFS(maze, (0, 0), (n, n))
+    AStar_blah, AStar_result, AStar_number_of_nodes_visited = AStar(maze, (0, 0), (n, n))
+    
+    print(search_time(reachable, 10000))
 
-    # print(f"BFS with length of: {len(BFS_result)} and # of nodes visited: {BFS_number_of_nodes_visited}\n{BFS_result}")
-    # print(f"AStar with length of: {len(AStar_result)} and # of nodes visited: {AStar_number_of_nodes_visited}\n{AStar_result}")
-
-    print(largest_maze_size(reachable, 10000))
-
+    print(f"BFS with length of: {len(BFS_result)} and # of nodes visited: {BFS_number_of_nodes_visited}\n{BFS_result}")
+    print(f"AStar with length of: {len(AStar_result)} and # of nodes visited: {AStar_number_of_nodes_visited}\n{AStar_result}")
     # for i in range(10):
     #     maze = advance_fire_one_step(maze, 0.5)
     #     print("ITERATION ", i)
     #     print_maze(maze)
+
+    # Questions to resolve later
+    #   should we allow fire at the start and/or goal?
+    #   should we implement option for player to "stay in same place"?
