@@ -1,6 +1,8 @@
 import random
+import math # Math functions
 import copy # Allows us to deep copy a 2D array
 from collections import deque # Importing a simple queue since pop(0) on a list is O(n) time where n is the size of the list
+import heapq # Importing functions to treat lists as heaps/prioirty queues
 
 # These offsets allow us to define all squares that potentially can be reached from a 'current' square
 nearby_offsets = [(-1, 0), (0, 1), (1, 0), (0, -1)]
@@ -18,6 +20,11 @@ def is_valid(square: tuple, n: int):
         return True
     return False
 
+def euclidean_distance(square_one: tuple, square_two: tuple):
+    """
+    Find the euclidean distance between two squares
+    """
+    return math.sqrt((square_one[0] - square_two[0]) ** 2 + (square_one[1] - square_two[1]) ** 2)
 
 def print_maze(maze: list):
     """
@@ -151,12 +158,6 @@ def reachable(maze: list, start: tuple, goal: tuple):
             return True  # If current is the goal, we found it!
 
         current_i, current_j = current  # Unpack the current pair
-        # If this square has not been visited yet
-        if (visited[current_i][current_j] == False):
-            visited[current_i][current_j] = True  # Set this square to visited
-
-
-        current_i, current_j = current # Unpack the current pair
         
         # Now we want to add all unvisited squares that are possible to get to from the current square
         for i in range(len(nearby_offsets)):
@@ -178,10 +179,11 @@ def BFS(maze: list, start: tuple, goal: tuple):
     start - an ordered pair of the indices representing the start square
     goal - an ordered pair of the indices representing the goal square
 
-    returns - an ordered pair, with the first element either True or False, 
+    returns - an ordered triple, with the first element either True or False, 
               representing whether or not it is possible to form a path. 
               The second element is a list of ordered pairs representing 
               (one of) the shortest path(s).
+              The third element is the number of nodes visited.
     """
     n = len(maze) # Get the dimension of the maze
 
@@ -198,6 +200,7 @@ def BFS(maze: list, start: tuple, goal: tuple):
     # End data checking statements
     #========================================#
 
+    number_of_nodes_visited = 0
     visited = copy.deepcopy(maze) # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
     # visited = list(map(list, maze)) # Alternative to using copy.deepcopy
 
@@ -209,6 +212,7 @@ def BFS(maze: list, start: tuple, goal: tuple):
 
     while (len(queue)): # While there exists items in the queue
         current = queue.popleft() # Pop the square at index 0
+        number_of_nodes_visited += 1 # Increase number of nodes visited
 
         if (current == goal): # If current is the goal, we found it!
             # We now want to traverse back to make a path using our 'previous' matrix
@@ -217,14 +221,9 @@ def BFS(maze: list, start: tuple, goal: tuple):
                 path.append(current)
                 current = previous[current[0]][current[1]]
             path.reverse()
-            return (True, path)
+            return (True, path, number_of_nodes_visited)
 
         current_i, current_j = current  # Unpack the current pair
-        # If this square has not been visited yet
-        if (visited[current_i][current_j] == False):
-            visited[current_i][current_j] = True  # Set this square to visited
-
-        current_i, current_j = current # Unpack the current pair
         
         # Now we want to add all unvisited squares that are possible to get to from the current square
         for i in range(len(nearby_offsets)):
@@ -236,13 +235,113 @@ def BFS(maze: list, start: tuple, goal: tuple):
                     queue.append(possible) # Add possible to our queue
                     visited[possible[0]][possible[1]] = 1 # Set possible to visited
                     previous[possible[0]][possible[1]] = current # Set the previous square for possible to the current square
-    return (False, []) # If the while loop goes out, and the queue is empty, then there is no possible path
+    return (False, [], number_of_nodes_visited) # If the while loop goes out, and the queue is empty, then there is no possible path
 
-maze = gen_fire_maze(6, 0.3)
+def AStar(maze: list, start: tuple, goal: tuple):
+    """ 
+    Determines the shortest path (if it exists) between
+    a start square and an end square using A* algorithm.
+
+    maze - a square 2D array
+    start - an ordered pair of the indices representing the start square
+    goal - an ordered pair of the indices representing the goal square
+
+    returns - an ordered triple, with the first element either True or False, 
+              representing whether or not it is possible to form a path. 
+              The second element is a list of ordered pairs representing 
+              (one of) the shortest path(s).
+              The third element is the number of nodes visited.
+    """
+    n = len(maze) # Get the dimension of the maze
+
+    #========================================#
+    # Some data checking statements
+
+    if (not is_valid(start, n)):
+        print("reachable: Start indices outside maze dimensions")
+        return False
+    elif (not is_valid(goal, n)):
+        print("reachable: Goal indices outside maze dimensions")
+        return False
+
+    # End data checking statements
+    #========================================#
+
+    number_of_nodes_visited = 0
+    # visited = copy.deepcopy(maze) # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
+    # visited = list(map(list, maze)) # Alternative to using copy.deepcopy
+
+    g_cost = [[float('inf') for i in range(n)] for j in range(n)] # Initialize a matrix of the same size as maze where each value is 'infinity'.
+    # f_cost = [[float('inf') for i in range(n)] for j in range(n)] # Initialize a matrix of the same size as maze where each value is 'infinity'.
+    previous = [[None for i in range(n)] for j in range(n)] # Initialize a matrix of the same size as maze where each value is None.
+
+    heap = [] # Define our 'heap' which is just a list, but all pushes and pops will be through the heapq library.
+    
+    heapq.heappush(heap, (0, start)) # Push our start onto the heap. It's ok for this to have 0 'f' value since it'll be immediately popped off anyway.
+    g_cost[start[0]][start[1]] = 0
+    # f_cost[start[0]][start[1]] = euclidean_distance(start, goal)
+
+    while (len(heap)): # While there exists items in the queue
+        min_value = heapq.heappop(heap) # Pop the square with lowest 'f' value from our heap.
+        number_of_nodes_visited += 1 # Increase number of nodes visited
+
+        # if (visited[current[0]][current[1]] == False): # If we have not visited this node
+        #     visited[start[0]][start[1]] = 1 # Set it to visited
+
+        current_f, current = min_value
+
+        if (current == goal): # If current is the goal, we found it!
+            # We now want to traverse back to make a path using our 'previous' matrix
+            path = []
+            while (current != None):
+                path.append(current)
+                current = previous[current[0]][current[1]]
+            path.reverse()
+            return (True, path, number_of_nodes_visited)
+
+        current_i, current_j = current  # Unpack the current pair
+        
+        # Now we want to add all unvisited squares that are possible to get to from the current square
+        for i in range(len(nearby_offsets)):
+            offset_i, offset_j = nearby_offsets[i]
+            possible = (current_i + offset_i, current_j + offset_j)
+            # print(f"Current possible: {possible_i} {possible_j}") # DEBUG
+            if (is_valid(possible, n)): # If the calculated square is within the maze matrix
+                if (maze[possible[0]][possible[1]]): # If there is something there
+                    continue
+                # Check to see if this path is better (just need to check g_cost since h_cost is always the same)
+                possible_g_cost = g_cost[current[0]][current[1]] + 1
+                if (possible_g_cost <  g_cost[possible[0]][possible[1]]): # If the cost is indeed less
+                    previous[possible[0]][possible[1]] = current
+                    g_cost[possible[0]][possible[1]] = possible_g_cost
+                    # Check to see if the node is in the heap, and if it is not, put it in.
+                    found = False
+                    for (f_cost, (square_i, square_j)) in heap:
+                        if (square_i == possible[0] and square_j == possible[1]):
+                            found = True
+                            break
+                    if (not found):
+                        heapq.heappush(heap, (possible_g_cost + euclidean_distance(possible, goal), possible))
+
+                # if (visited[possible[0]][possible[1]]): # If this node has already been visited
+                #     # Check to see if this path is better (just need to check g_cost since h_cost is always the same)
+                #     if (f_cost[possible[0]][possible[1]] > possible_f_cost):
+                #         heapq.heappush(heap, (possible_f_cost, possible)) # Push this back onto the heap for re-examination
+                #         f_cost[possible[0]][possible[1]] = possible_f_cost # Assign the new f-cost
+                #         previous[possible[0]][possible[1]] = current # Update previous
+                # else
+    return (False, [], number_of_nodes_visited) # If the while loop goes out, and the queue is empty, then there is no possible path
+n = 19
+maze = gen_fire_maze(n + 1, 0.3)
+print(maze)
 print_maze(maze)
-print(BFS(maze, (0, 0), (5, 5)))
+print(reachable(maze, (0, 0), (n, n)))
+BFS_blah, BFS_result, BFS_number_of_nodes_visited = BFS(maze, (0, 0), (n, n))
+AStar_blah, AStar_result, AStar_number_of_nodes_visited = AStar(maze, (0, 0), (n, n))
 
-for i in range(10):
-    maze = advance_fire_one_step(maze, 0.5)
-    print("ITERATION ", i)
-    print_maze(maze)
+print(f"BFS with length of: {len(BFS_result)} and # of nodes visited: {BFS_number_of_nodes_visited}\n{BFS_result}")
+print(f"AStar with length of: {len(AStar_result)} and # of nodes visited: {AStar_number_of_nodes_visited}\n{AStar_result}")
+# for i in range(10):
+#     maze = advance_fire_one_step(maze, 0.5)
+#     print("ITERATION ", i)
+#     print_maze(maze)
