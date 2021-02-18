@@ -1,5 +1,7 @@
 import random
 import math # Math functions
+import time # Time function to test our algorithm speeds
+
 import copy # Allows us to deep copy a 2D array
 from collections import deque # Importing a simple queue since pop(0) on a list is O(n) time where n is the size of the list
 import heapq # Importing functions to treat lists as heaps/prioirty queues
@@ -25,6 +27,31 @@ def euclidean_distance(square_one: tuple, square_two: tuple):
     Find the euclidean distance between two squares
     """
     return math.sqrt((square_one[0] - square_two[0]) ** 2 + (square_one[1] - square_two[1]) ** 2)
+
+def largest_maze_size(search_algo, maze_size: int = 2):
+    """
+    Find the largest maze size that can be 'solved' in the given seconds.
+
+    search_algo - the search algorithm
+
+    returns - the time taken for a maze (that has a valid path)
+    """
+
+    while (True):
+        print("Trying...")
+        start_time = time.time() # Define start time as current time
+        result = search_algo(gen_maze(maze_size, 0.3), (0, 0), (maze_size - 1, maze_size - 1)) # Run algo
+        end_time = time.time() # Define end time as current time
+        try:
+            result_iter = iter(result) # Checks whether or not the return is a tuple or just a single value
+        except TypeError:
+            if (result): # If there was a path
+                return end_time - start_time
+        else:
+            if (result[0]): # If there was a path
+                return end_time - start_time
+
+
 
 def print_maze(maze: list):
     """
@@ -333,16 +360,19 @@ def AStar(maze: list, start: tuple, goal: tuple):
     return (False, [], number_of_nodes_visited) # If the while loop goes out, and the queue is empty, then there is no possible path
 
 if __name__ == "__main__":
-    n = 19
-    maze = gen_fire_maze(n + 1, 0.3)
-    print(maze)
-    print_maze(maze)
-    print(reachable(maze, (0, 0), (n, n)))
-    BFS_blah, BFS_result, BFS_number_of_nodes_visited = BFS(maze, (0, 0), (n, n))
-    AStar_blah, AStar_result, AStar_number_of_nodes_visited = AStar(maze, (0, 0), (n, n))
+    # n = 19
+    # maze = gen_fire_maze(n + 1, 0.3)
+    # print(maze)
+    # print_maze(maze)
+    # print(reachable(maze, (0, 0), (n, n)))
+    # BFS_blah, BFS_result, BFS_number_of_nodes_visited = BFS(maze, (0, 0), (n, n))
+    # AStar_blah, AStar_result, AStar_number_of_nodes_visited = AStar(maze, (0, 0), (n, n))
 
-    print(f"BFS with length of: {len(BFS_result)} and # of nodes visited: {BFS_number_of_nodes_visited}\n{BFS_result}")
-    print(f"AStar with length of: {len(AStar_result)} and # of nodes visited: {AStar_number_of_nodes_visited}\n{AStar_result}")
+    # print(f"BFS with length of: {len(BFS_result)} and # of nodes visited: {BFS_number_of_nodes_visited}\n{BFS_result}")
+    # print(f"AStar with length of: {len(AStar_result)} and # of nodes visited: {AStar_number_of_nodes_visited}\n{AStar_result}")
+
+    print(largest_maze_size(reachable, 10000))
+
     # for i in range(10):
     #     maze = advance_fire_one_step(maze, 0.5)
     #     print("ITERATION ", i)
