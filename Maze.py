@@ -191,10 +191,10 @@ def BFS(maze: list, start: tuple, goal: tuple):
     # Some data checking statements
 
     if (not is_valid(start, n)):
-        print("reachable: Start indices outside maze dimensions")
+        print("BFS: Start indices outside maze dimensions")
         return False
     elif (not is_valid(goal, n)):
-        print("reachable: Goal indices outside maze dimensions")
+        print("BFS: Goal indices outside maze dimensions")
         return False
 
     # End data checking statements
@@ -258,10 +258,10 @@ def AStar(maze: list, start: tuple, goal: tuple):
     # Some data checking statements
 
     if (not is_valid(start, n)):
-        print("reachable: Start indices outside maze dimensions")
+        print("AStar: Start indices outside maze dimensions")
         return False
     elif (not is_valid(goal, n)):
-        print("reachable: Goal indices outside maze dimensions")
+        print("AStar: Goal indices outside maze dimensions")
         return False
 
     # End data checking statements
