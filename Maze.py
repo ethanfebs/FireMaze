@@ -331,17 +331,19 @@ def AStar(maze: list, start: tuple, goal: tuple):
                 #         previous[possible[0]][possible[1]] = current # Update previous
                 # else
     return (False, [], number_of_nodes_visited) # If the while loop goes out, and the queue is empty, then there is no possible path
-n = 19
-maze = gen_fire_maze(n + 1, 0.3)
-print(maze)
-print_maze(maze)
-print(reachable(maze, (0, 0), (n, n)))
-BFS_blah, BFS_result, BFS_number_of_nodes_visited = BFS(maze, (0, 0), (n, n))
-AStar_blah, AStar_result, AStar_number_of_nodes_visited = AStar(maze, (0, 0), (n, n))
 
-print(f"BFS with length of: {len(BFS_result)} and # of nodes visited: {BFS_number_of_nodes_visited}\n{BFS_result}")
-print(f"AStar with length of: {len(AStar_result)} and # of nodes visited: {AStar_number_of_nodes_visited}\n{AStar_result}")
-# for i in range(10):
-#     maze = advance_fire_one_step(maze, 0.5)
-#     print("ITERATION ", i)
-#     print_maze(maze)
+if __name__ == "__main__":
+    n = 19
+    maze = gen_fire_maze(n + 1, 0.3)
+    print(maze)
+    print_maze(maze)
+    print(reachable(maze, (0, 0), (n, n)))
+    BFS_blah, BFS_result, BFS_number_of_nodes_visited = BFS(maze, (0, 0), (n, n))
+    AStar_blah, AStar_result, AStar_number_of_nodes_visited = AStar(maze, (0, 0), (n, n))
+
+    print(f"BFS with length of: {len(BFS_result)} and # of nodes visited: {BFS_number_of_nodes_visited}\n{BFS_result}")
+    print(f"AStar with length of: {len(AStar_result)} and # of nodes visited: {AStar_number_of_nodes_visited}\n{AStar_result}")
+    # for i in range(10):
+    #     maze = advance_fire_one_step(maze, 0.5)
+    #     print("ITERATION ", i)
+    #     print_maze(maze)
