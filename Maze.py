@@ -410,9 +410,14 @@ def fire_strategy_3(maze, q, alpha):
     maze_f = copy.deepcopy(maze)
     agent_pos = (0, 0)
 
+    for i in range(n):
+        for j in range(n):
+            if(maze[i][j]==2):
+                fire_start = (i,j)
+
     while(agent_pos != (n-1, n-1)):
 
-        path = AStar_Modified(maze_f, agent_pos, (n-1, n-1),2,q)
+        path = AStar_Modified(maze_f, agent_pos, (n-1, n-1),2,q,fire_start)
 
         # End if no path exists from start to goal
         if(not path[0]):
@@ -539,7 +544,7 @@ def AStar(maze: list, start: tuple, goal: tuple):
                 # else
     return (False, [], number_of_nodes_visited) # If the while loop goes out, and the queue is empty, then there is no possible path
 
-def AStar_Modified(maze: list, start: tuple, goal: tuple, alpha: float, q: float):
+def AStar_Modified(maze: list, start: tuple, goal: tuple, alpha: float, q: float, fire_start: tuple):
     """ 
     Determines the shortest path (if it exists) between
     a start square and an end square using A* algorithm
@@ -620,7 +625,9 @@ def AStar_Modified(maze: list, start: tuple, goal: tuple, alpha: float, q: float
                 if (maze[possible[0]][possible[1]]): # If there is something there
                     continue
                 # Check to see if this path is better (just need to check g_cost since h_cost is always the same)
-                possible_g_cost = g_cost[current[0]][current[1]] + 1 + alpha*maze_future[possible[0]][possible[1]]
+                possible_g_cost = g_cost[current[0]][current[1]] + 1
+                #increase cost of moving to a node if there is a probability it will be on fire next turn
+                possible_g_cost += alpha*maze_future[possible[0]][possible[1]]
                 if (possible_g_cost <  g_cost[possible[0]][possible[1]]): # If the cost is indeed less
                     previous[possible[0]][possible[1]] = current
                     g_cost[possible[0]][possible[1]] = possible_g_cost
@@ -657,7 +664,7 @@ if __name__ == "__main__":
     
     # print(search_time(AStar, 2750))
 
-    maze = gen_maze(15,0.3)
+    maze = gen_maze(200,0.3)
     maze_f = gen_fire_maze(maze)
     # print_maze(maze_f)
     c1 = 0
