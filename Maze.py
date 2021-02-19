@@ -148,6 +148,36 @@ def advance_fire_one_step(maze, q):
     # return maze with fire advanced on step
     return next_maze
 
+def advance_fire_probability(maze, q):
+    """
+    Calculates probabilities of fire spreading to cells in next step
+        1. cells on fire stay on fire
+        2. empty cells with no adjacent cells on fire stay empty
+        3. blocked cells cannot be set on fire
+        4. empty cells with k adjacent cells on fire are set to their probability value 1-(1-q)^k
+    """
+
+    n = len(maze)  # get dimension of maze
+    next_maze = copy.deepcopy(maze)  # create a copy of previous maze
+
+    # iterate over all cells in the maze
+    for i in range(n):
+        for j in range(n):
+            # check if cell is empty
+            if(next_maze[i][j] == 0):
+                k = 0
+                # count number of adjacent cells that are on fire
+                for x in range(len(nearby_offsets)):
+                    offset_i, offset_j = nearby_offsets[x]
+                    possible = (i + offset_i, j + offset_j)
+
+                    if(is_valid(possible, n) and next_maze[possible[0]][possible[1]] == 2):
+                        k += 1
+                #set value to probability maze will be set on fire in the next step
+                next_maze[i][j] = 1-((1-q) ** k)
+
+    # return maze with fire advanced on step
+    return next_maze
 
 def reachable(maze: list, start: tuple, goal: tuple):
     """
@@ -365,6 +395,49 @@ def fire_strategy_2(maze, q):
     # function should always return before while loop is completed
     return False
 
+def fire_strategy_3(maze, q, alpha):
+    """
+    Recalculate the shortest path through the fire at each timestep
+    Return false if agent touches fire cell on path
+    Returns true otherwise
+
+    alpha - parameter for how adverse agent is to moving into a cell with probability of setting on fire
+    """
+
+    n = len(maze)
+
+    timestep = 0
+    maze_f = copy.deepcopy(maze)
+    agent_pos = (0, 0)
+
+    while(agent_pos != (n-1, n-1)):
+
+        path = AStar_Modified(maze_f, agent_pos, (n-1, n-1),2,q)
+
+        # End if no path exists from start to goal
+        if(not path[0]):
+            return False
+
+        route = path[1]
+        timestep += 1  # increase timer by 1
+        agent_pos = route[1]  # update to new position
+
+        # if agent moves into fire, report failure
+        if(maze_f[agent_pos[0]][agent_pos[1]] != 0):
+            return False
+
+        # if agent has reached goal, report success
+        if(agent_pos == (n-1, n-1)):
+            return True
+
+        maze_f = advance_fire_one_step(maze_f, q)  # advance fire
+
+        # if fire spread into agent, report failure
+        if(maze_f[agent_pos[0]][agent_pos[1]] != 0):
+            return False
+
+    # function should always return before while loop is completed
+    return False
 
 def AStar(maze: list, start: tuple, goal: tuple):
     """ 
@@ -466,6 +539,113 @@ def AStar(maze: list, start: tuple, goal: tuple):
                 # else
     return (False, [], number_of_nodes_visited) # If the while loop goes out, and the queue is empty, then there is no possible path
 
+def AStar_Modified(maze: list, start: tuple, goal: tuple, alpha: float, q: float):
+    """ 
+    Determines the shortest path (if it exists) between
+    a start square and an end square using A* algorithm
+    where the cost to traverse from one square to another is increased
+    by a value proportional to the likelyhood of fire spreading there in the next step
+
+    maze - a square 2D array
+    start - an ordered pair of the indices representing the start square
+    goal - an ordered pair of the indices representing the goal square
+    alpha - parameter for how adverse agent is to moving into a cell with probability of setting on fire
+    q - parameter for how quickly the fire spreads
+
+    returns - an ordered triple, with the first element either True or False, 
+              representing whether or not it is possible to form a path. 
+              The second element is a list of ordered pairs representing 
+              (one of) the shortest path(s).
+              The third element is the number of nodes visited.
+    """
+    n = len(maze) # Get the dimension of the maze
+
+    #========================================#
+    # Some data checking statements
+
+    if (not is_valid(start, n)):
+        print("AStar: Start indices outside maze dimensions")
+        return False
+    elif (not is_valid(goal, n)):
+        print("AStar: Goal indices outside maze dimensions")
+        return False
+
+    # End data checking statements
+    #========================================#
+
+    number_of_nodes_visited = 0
+    # We can use a simple visited matrix since the heuristic (euclidean distance) is both admissible AND consistent
+    visited = copy.deepcopy(maze) # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
+    # visited = list(map(list, maze)) # Alternative to using copy.deepcopy
+
+    g_cost = [[float('inf') for i in range(n)] for j in range(n)] # Initialize a matrix of the same size as maze where each value is 'infinity'.
+    # f_cost = [[float('inf') for i in range(n)] for j in range(n)] # Initialize a matrix of the same size as maze where each value is 'infinity'.
+    previous = [[None for i in range(n)] for j in range(n)] # Initialize a matrix of the same size as maze where each value is None.
+
+    maze_future = copy.deepcopy(maze) #create maze that stores probabilities of where fire will be in next step
+    maze_future = advance_fire_probability(maze_future,q) #calculate future probabilities
+
+    heap = [] # Define our 'heap' which is just a list, but all pushes and pops will be through the heapq library.
+    
+    heapq.heappush(heap, (0, start)) # Push our start onto the heap. It's ok for this to have 0 'f' value since it'll be immediately popped off anyway.
+    g_cost[start[0]][start[1]] = 0
+    # f_cost[start[0]][start[1]] = euclidean_distance(start, goal)
+
+    while (len(heap)): # While there exists items in the queue
+        min_value = heapq.heappop(heap) # Pop the square with lowest 'f' value from our heap.
+        number_of_nodes_visited += 1 # Increase number of nodes visited
+
+        # if (visited[current[0]][current[1]] == False): # If we have not visited this node
+        #     visited[start[0]][start[1]] = 1 # Set it to visited
+
+        current_f, current = min_value
+
+        if (current == goal): # If current is the goal, we found it!
+            # We now want to traverse back to make a path using our 'previous' matrix
+            path = []
+            while (current != None):
+                path.append(current)
+                current = previous[current[0]][current[1]]
+            path.reverse()
+            return (True, path, number_of_nodes_visited)
+
+        current_i, current_j = current  # Unpack the current pair
+        
+        # Now we want to add all unvisited squares that are possible to get to from the current square
+        for i in range(len(nearby_offsets)):
+            offset_i, offset_j = nearby_offsets[i]
+            possible = (current_i + offset_i, current_j + offset_j)
+            # print(f"Current possible: {possible_i} {possible_j}") # DEBUG
+            if (is_valid(possible, n)): # If the calculated square is within the maze matrix
+                if (maze[possible[0]][possible[1]]): # If there is something there
+                    continue
+                # Check to see if this path is better (just need to check g_cost since h_cost is always the same)
+                possible_g_cost = g_cost[current[0]][current[1]] + 1 + alpha*maze_future[possible[0]][possible[1]]
+                if (possible_g_cost <  g_cost[possible[0]][possible[1]]): # If the cost is indeed less
+                    previous[possible[0]][possible[1]] = current
+                    g_cost[possible[0]][possible[1]] = possible_g_cost
+                    # Check to see if the node is in the heap, and if it is not, put it in.
+                    if (not visited[possible[0]][possible[1]]):
+                        heapq.heappush(heap, (possible_g_cost + euclidean_distance(possible, goal), possible))
+                        visited[possible[0]][possible[1]] = 1
+                    
+                    # found = False
+                    # for (f_cost, (square_i, square_j)) in heap:
+                    #     if (square_i == possible[0] and square_j == possible[1]):
+                    #         found = True
+                    #         break
+                    # if (not found):
+                    #     heapq.heappush(heap, (possible_g_cost + euclidean_distance(possible, goal), possible))
+
+                # if (visited[possible[0]][possible[1]]): # If this node has already been visited
+                #     # Check to see if this path is better (just need to check g_cost since h_cost is always the same)
+                #     if (f_cost[possible[0]][possible[1]] > possible_f_cost):
+                #         heapq.heappush(heap, (possible_f_cost, possible)) # Push this back onto the heap for re-examination
+                #         f_cost[possible[0]][possible[1]] = possible_f_cost # Assign the new f-cost
+                #         previous[possible[0]][possible[1]] = current # Update previous
+                # else
+    return (False, [], number_of_nodes_visited) # If the while loop goes out, and the queue is empty, then there is no possible path
+
 if __name__ == "__main__":
     # n = 999
     # maze = gen_maze(n + 1, 0.3)
@@ -475,7 +655,26 @@ if __name__ == "__main__":
     # BFS_blah, BFS_result, BFS_number_of_nodes_visited = BFS(maze, (0, 0), (n, n))
     # AStar_blah, AStar_result, AStar_number_of_nodes_visited = AStar(maze, (0, 0), (n, n))
     
-    print(search_time(AStar, 2750))
+    # print(search_time(AStar, 2750))
+
+    maze = gen_maze(15,0.3)
+    maze_f = gen_fire_maze(maze)
+    # print_maze(maze_f)
+    c1 = 0
+    c2 = 0
+    c3 = 0
+    print('####')
+    for i in range(3000):
+        maze = gen_maze(15,0.3)
+        maze_f = gen_fire_maze(maze)
+        if(fire_strategy_1(maze_f,0.5)):
+            c1 +=1
+        if(fire_strategy_2(maze_f,0.5)):
+            c2 +=1
+        if(fire_strategy_3(maze_f,0.5,1)):
+            c3 +=1
+    
+    print(c1, c2, c3)
 
     # print(f"BFS with length of: {len(BFS_result)} and # of nodes visited: {BFS_number_of_nodes_visited}\nLength of path: {len(BFS_result)}")
     # print(f"AStar with length of: {len(AStar_result)} and # of nodes visited: {AStar_number_of_nodes_visited}\nLength of path: {len(AStar_result)}")
