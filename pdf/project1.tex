@@ -1,0 +1,161 @@
+% --------------------------------------------------------------
+% This is all preamble stuff that you don't have to worry about.
+% Head down to where it says "Start here"
+% --------------------------------------------------------------
+ 
+\documentclass[12pt, twoside]{article}
+ 
+\usepackage{fancyhdr}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+
+\usepackage{fancyvrb, newverbs}
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+% -------------------------------------------------------------
+% Graphics path
+% -------------------------------------------------------------
+\graphicspath{{../graphs/}}
+
+% -------------------------------------------------------------
+% Verbatim background
+% -------------------------------------------------------------
+\definecolor{verbbg}{gray}{0.93}
+\newverbcommand{\cverb}
+  {\setbox\verbbox\hbox\bgroup}
+  {\egroup\colorbox{verbbg}{\box\verbbox}}
+
+% -------------------------------------------------------------
+% Setup constants 
+% -------------------------------------------------------------
+\newcommand{\name}{Ethan Febinger, Ryan Mao}
+\newcommand{\class}{CS 440: Intro to AI}
+\newcommand{\hwTitle}{Project 1} % Change this for a new homework
+\newcommand{\due}{February 19, 2021} % Change this for a new homework
+
+
+% --------------------------------------------------------------
+% Setup header and footer.
+% --------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\hwTitle \hfill \thepage}
+\fancyfoot[C]{\name \hfill \class}
+\renewcommand{\headrulewidth}{0.4pt} % default is 0pt
+\renewcommand{\footrulewidth}{0.4pt} % default is 0pt
+ 
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand\ddfrac[2]{\frac{\displaystyle #1}{\displaystyle #2}}
+ 
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+ 
+\begin{document}
+ 
+% --------------------------------------------------------------
+%                         Start here
+% --------------------------------------------------------------
+ 
+\title{\hwTitle} % replace X with the appropriate number
+\author{\name\\  % replace with your name
+\class} % if necessary, replace with your course title
+\date{\due}
+ 
+\maketitle
+
+\section{Preliminaries}
+\begin{enumerate}
+    \item 
+        \textit{Write an algorithm for generating a maze with a given dimension and obstacle density p.}
+        
+        \vspace{4mm}
+        See function \cverb|gen_maze| in \cverb|Maze.py|. \\
+        The function takes in two parameters: the first parameter is the desired dimension of the maze, and the second parameter is the desired obstacle density. The maze is represented as a list of lists (a 2D list). The resulting maze will have a $0$ to represent an open square, and a $1$ to represent a square with an obstacle. 
+
+    \item 
+        \textit{Write  a  DFS  algorithm  that  takes  a  maze  and  two  locations  within  it,  and             determines whether  one  is  reachable  from  the  other.  Why  is  DFS  a  better  choice  than  BFS  here?  For  as  large  adimension as your system can handle,  generate a plot of ‘obstacle density p’ vs ‘probability that S can be reached from G’.}
+
+        \vspace{4mm}
+        See function \cverb|reachable| in \cverb|Maze.py|. \\
+        The function uses DFS to determine whether or not there exists a path between the start square and the goal square. The function returns a boolean: \cverb|True| if there exists a path, and similarly, \cverb|False| if you cannot get to the goal from the start. The function does not return any paths.
+
+        \vspace{4mm}
+        DFS is a better choice than BFS here since we only wish to determine whether or not the maze is possible to traverse given a start and goal square. Therefore, there is no need to find an optimal path, only a valid path. Due to the nature of the DFS algorithm, it explores as deep as it can before considering branching sideways. In contrast, BFS branches as much as it can before stepping one square deeper. In other words, DFS will go as far as it can until there are no more nodes for it to visit, so it explores nodes farther from the start square (and closer to the goal square), first. If there exists no path, DFS and BFS will take the same amount of time as all squares will be explored regardless.
+        % IDK if this makes sense. Maybe add more to this explanation.
+        % Since the start and goal squares are constant in this scenario, i.e. start is the top left square and goal is the bottom right square, if we define "deeper" to be to the bottom and to the right, DFS will take on average less time than BFS.
+        
+        \vspace{4mm}
+        For the graph of `obstacle density p' vs `probability that S can be reached from G', we define probability as:
+        \begin{center}
+            \[\ddfrac{Number\_of\_Successes}{Total\_Sample\_Space}\]
+        \end{center}
+
+        Below is a scatter plot generated by the function \cverb|generate_reachable_plot| in \\ \cverb|Graphs.py|.
+
+        \begin{figure}[h]
+            \centering
+            \includegraphics[scale = 0.6]{reachable_scatter.png}
+        \end{figure}
+
+        The data for this graph was gathered by generating $1,000$ mazes at each $p$ value and counting how many of those mazes had a valid path. The mazes were of size $15$. The $p$ values ranged from $0$ to $1$ (inclusive on both sides), with a step of $0.01$. 
+
+        The graph resembles an upside-down logistics graph. The graph is also always decreasing. The slope decreases slowly at first, then begins to decrease faster, but finally flattens out towards the end. 
+        
+        We see that the probability of a valid path occurring is practically $0$ at a $p$ value of $0.5$ and larger.
+
+        \vfill
+
+    \item
+        \textit{Write BFS and A* algorithms (using the euclidean distance metric) that take a maze and determine  the  shortest  path  from S to G if  one  exists.  For  as  large  a  dimension  as  your  system  can handle, generate a plot of the average ‘number of nodes explored by BFS - number of nodes explored by A*’ vs ‘obstacle density p’.  If there is no path from S to G, what should this difference be?}
+
+        \vspace{4mm}
+        See function \cverb|BFS| in \cverb|Maze.py|. See function \cverb|AStar| in \cverb|Maze.py|.
+
+        \vspace{4mm}
+        For the graph of `number of nodes explored by BFS - number of nodes explored by A*' vs `obstacle density p', we generate a maze using a given dimension and $p$ value, and proceed to run both our BFS and A* algorithms. Both functions return not only a \cverb|True| or \cverb|False| value to represent the existance of a path, but also an optimal path, and the number of squares checked to find said optimal path. Taking the BFS squares explored value, and subtracting the A* squares explored value, gives us the difference in squares explored between the two. Note that this value is always greater or equal to 0 since A* will always explore less than or equal to BFS (In fact, whenever there does NOT exist a valid path, both functions will explore the same amount of squares: i.e. all possible squares reachable from the start square).  
+
+        Below is a scatter plot generated by the function \cverb|generate_BFS_AStar_plot| in \\ \cverb|Graphs.py|.
+
+        \begin{figure}[h]
+            \centering
+            \includegraphics[scale = 0.6]{BFS_AStar_scatter.png}
+        \end{figure}
+
+        The data for this graph was gathered by generating $1,000$ mazes at each $p$ value and summing the difference between the number of squares explored for the two search algorithms. Then we divide the sum by $1,000$ to get the average difference. The mazes were of size $15$. The $p$ values ranged from $0$ to $1$ (inclusive on both sides), with a step of $0.01$. 
+    
+    \item
+        \textit{What’s the largest dimension you can solve using DFS at p= 0.3 in less than a minute? What’s  the  largest  dimension  you  can  solve  using  BFS  at p= 0.3 in  less  than  a  minute?  What’s  the largest dimension you can solve using A* at p= 0.3 in less than a minute?}
+
+        \vspace{4mm}
+        See function \cverb|search_time| in \cverb|Maze.py|. \\
+        This function, when given a search algorithm and a maze size, generates mazes until a maze with a valid path is "solved" by the search algorithm (that is a valid/optimal path is found). The return value is the time in seconds that the search algorithm took.
+
+        \vspace{4mm}
+        The largest dimension that DFS can solve at a $p$ value of 0.3 in less than a minute (specifically 59 seconds) is $7,500$. The DFS function uses a replicated version of the maze as a visited matrix, allowing us to access and change visited values in constant time. The downside of this, however, is that we must perform a value by value copy, which is inefficient if we only explore a small amount of squares (e.g. if the starting square is surrounded by obstacles, the DFS function still creates the visited matrix).
+
+        \vspace{4mm}
+        The largest dimension that BFS can solve at $p$ value of 0.3 in less than a minute (specifically 55 seconds) is $4550$. However, when we have a maze size of $4600$, the average compute time is 61 seconds. Therefore, the actual maze size to achieve as close to 60 seconds as possible lies within $4550$ and $4600$. These results agree with our predictions, in that BFS takes longer than DFS since it computes for an optimal path rather than simply the existance of one.
+
+        \vspace{4mm}
+        The largest dimension that A* can solve at $p$ value of 0.3 in less than a minute (or exactly a minute) is $2750$. We see from these results that the euclidean distance calculation does in fact add a decent amount of computation time. 
+
+\end{enumerate}
+ 
+% --------------------------------------------------------------
+%     You don't have to mess with anything below this line.
+% --------------------------------------------------------------
+ 
+\end{document}

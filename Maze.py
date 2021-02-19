@@ -270,7 +270,7 @@ def BFS(maze: list, start: tuple, goal: tuple):
                     # Set the previous square for possible to the current square
                     previous[possible[0]][possible[1]] = current
     # If the while loop goes out, and the queue is empty, then there is no possible path
-    return (False, [])
+    return (False, [], number_of_nodes_visited)
 
 
 def fire_strategy_1(maze, q):
@@ -397,7 +397,8 @@ def AStar(maze: list, start: tuple, goal: tuple):
     #========================================#
 
     number_of_nodes_visited = 0
-    # visited = copy.deepcopy(maze) # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
+    # We can use a simple visited matrix since the heuristic (euclidean distance) is both admissible AND consistent
+    visited = copy.deepcopy(maze) # We can use a copy of the maze to keep track of visited squares (Considered using a set here, thought that time efficiency was important)
     # visited = list(map(list, maze)) # Alternative to using copy.deepcopy
 
     g_cost = [[float('inf') for i in range(n)] for j in range(n)] # Initialize a matrix of the same size as maze where each value is 'infinity'.
@@ -444,13 +445,17 @@ def AStar(maze: list, start: tuple, goal: tuple):
                     previous[possible[0]][possible[1]] = current
                     g_cost[possible[0]][possible[1]] = possible_g_cost
                     # Check to see if the node is in the heap, and if it is not, put it in.
-                    found = False
-                    for (f_cost, (square_i, square_j)) in heap:
-                        if (square_i == possible[0] and square_j == possible[1]):
-                            found = True
-                            break
-                    if (not found):
+                    if (not visited[possible[0]][possible[1]]):
                         heapq.heappush(heap, (possible_g_cost + euclidean_distance(possible, goal), possible))
+                        visited[possible[0]][possible[1]] = 1
+                    
+                    # found = False
+                    # for (f_cost, (square_i, square_j)) in heap:
+                    #     if (square_i == possible[0] and square_j == possible[1]):
+                    #         found = True
+                    #         break
+                    # if (not found):
+                    #     heapq.heappush(heap, (possible_g_cost + euclidean_distance(possible, goal), possible))
 
                 # if (visited[possible[0]][possible[1]]): # If this node has already been visited
                 #     # Check to see if this path is better (just need to check g_cost since h_cost is always the same)
@@ -462,18 +467,18 @@ def AStar(maze: list, start: tuple, goal: tuple):
     return (False, [], number_of_nodes_visited) # If the while loop goes out, and the queue is empty, then there is no possible path
 
 if __name__ == "__main__":
-    n = 19
-    maze = gen_fire_maze(n + 1, 0.3)
-    print(maze)
-    print_maze(maze)
-    print(reachable(maze, (0, 0), (n, n)))
-    BFS_blah, BFS_result, BFS_number_of_nodes_visited = BFS(maze, (0, 0), (n, n))
-    AStar_blah, AStar_result, AStar_number_of_nodes_visited = AStar(maze, (0, 0), (n, n))
+    # n = 999
+    # maze = gen_maze(n + 1, 0.3)
+    # print(maze)
+    # print_maze(maze)
+    # print(reachable(maze, (0, 0), (n, n)))
+    # BFS_blah, BFS_result, BFS_number_of_nodes_visited = BFS(maze, (0, 0), (n, n))
+    # AStar_blah, AStar_result, AStar_number_of_nodes_visited = AStar(maze, (0, 0), (n, n))
     
-    print(search_time(reachable, 10000))
+    print(search_time(AStar, 2750))
 
-    print(f"BFS with length of: {len(BFS_result)} and # of nodes visited: {BFS_number_of_nodes_visited}\n{BFS_result}")
-    print(f"AStar with length of: {len(AStar_result)} and # of nodes visited: {AStar_number_of_nodes_visited}\n{AStar_result}")
+    # print(f"BFS with length of: {len(BFS_result)} and # of nodes visited: {BFS_number_of_nodes_visited}\nLength of path: {len(BFS_result)}")
+    # print(f"AStar with length of: {len(AStar_result)} and # of nodes visited: {AStar_number_of_nodes_visited}\nLength of path: {len(AStar_result)}")
     # for i in range(10):
     #     maze = advance_fire_one_step(maze, 0.5)
     #     print("ITERATION ", i)
