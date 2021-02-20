@@ -150,6 +150,7 @@
         The largest dimension that DFS can solve at a $p$ value of 0.3 in less than a minute (specifically 59 seconds) is $7,500$. The DFS function uses a replicated version of the maze as a visited matrix, allowing us to access and change visited values in constant time. The downside of this, however, is that we must perform a value by value copy, which is inefficient if we only explore a small amount of squares (e.g. if the starting square is surrounded by obstacles, the DFS function still creates the visited matrix).
 
         \vspace{4mm}
+<<<<<<< HEAD
         The largest dimension that BFS can solve at $p$ value of 0.3 in less than a minute (specifically 55 seconds) is $4,550$. However, when we have a maze size of $4,600$, the average compute time is 61 seconds. Therefore, the actual maze size to achieve as close to 60 seconds as possible lies within $4,550$ and $4,600$. These results agree with our predictions, in that BFS takes longer than DFS since it computes for an optimal path rather than simply the existance of one.
 
         \vspace{4mm}
@@ -204,11 +205,23 @@
 
     \item 
         \textit{Which strategy performed better?}
+=======
+        The largest dimension that BFS can solve at $p$ value of 0.3 in less than a minute (specifically 55 seconds) is $4550$. However, when we have a maze size of $4600$, the average compute time is 61 seconds. Therefore, the actual maze size to achieve as close to 60 seconds as possible lies within $4550$ and $4600$. These results agree with our predictions, in that BFS takes longer than DFS since it computes for an optimal path rather than simply the existence of one.
+>>>>>>> d5a67a483d6a0209f9fb46e8aa746bd52dd1f44b
 
         \vspace{4mm}
         Without a doubt, strategy 2 has higher number of average successes than strategy 1. Clearly, adding the extra computations needed to reevaluate and update the path based on new fire spread information helped the survivability of the agent. 
 
 
+\end{enumerate}
+
+\section{Fire Maze}
+\begin{enumerate}
+    \setcounter{enumi}{4}
+    \item Our strategy 3 accounts for the unknown future by incentivising $A^*$ to find paths that stay away from where the fire will spread in the future. Similar to strategy 2, this algorithm recomputes $A^*$ at every timestep to use the most up to date information on where the fire has spread. 
+    
+    \vspace{4mm}
+    Our modified $A^*$ function \cverb|AStar_Modified| calls the function \cverb|advance_fire_probability|. This returns a copy of the maze that stores the probability that each empty cell will be set on fire in the next given turn. Then, this probability is added to the cost of traveling to the cell. By increasing the cost of traveling to such cells, we are discouraging our $A^*$ algorithm from choosing paths that travel nearby the fire. This helps the agent avoid the fire spreading into it while it is traversing the maze, which increases the probability of success.
 \end{enumerate}
  
 % --------------------------------------------------------------
