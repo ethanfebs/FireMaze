@@ -100,7 +100,7 @@ def gen_fire_maze(maze):
         for j in range(dim):
             if(maze_f[i][j] == 0 and fire_spawn == 0):
                 maze_f[i][j] = 2  # set cell to be on fire
-                return maze_f
+                return (maze_f, (i, j))
             elif(maze_f[i][j] == 0):
                 fire_spawn -= 1  # decrement counter
 
@@ -310,7 +310,6 @@ def fire_strategy_1(maze, q):
     Return false if agent touches fire cell on path
     Returns true otherwise
     """
-
     n = len(maze)
     path = BFS(maze, (0, 0), (n-1, n-1))
 
