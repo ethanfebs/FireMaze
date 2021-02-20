@@ -267,7 +267,7 @@ We, Ryan Mao and Ethan Febinger, certify that the code and report for this assig
 
         The maze size is $50$, amd each $q$ value has $10$ mazes generated, with each maze then having $10$ different fire starting points. Unfortunately, we could not use the same maze size for strategy 3 as we did for strategy 1 and 2 as it took an extremely long time to run.
 
-        The strategy 3 graph looks very similar to that of strategy 2. Both strategies seem to fair than strategy 1, and this could be attributed to the idea of recalculating a path every time the fire advances one step. However, with strategy 2, the future is not taken into account. Our attempt with strategy 3 was to "predict" where the fire would go, and try to actively avoid those squares by adding a large weight to any path that runs through a future fire square. The effects of future-proofing can be seen through the plot: strategy 2 has a $0$ success rate for all $q$ values after $0.6$, our strategy 3 seemed to only reach $0$ at $q = 0.6$.
+        The strategy 3 graph looks very similar to that of strategy 2. Both strategies seem to fair than strategy 1, and this could be attributed to the idea of recalculating a path every time the fire advances one step. However, with strategy 2, the future is not taken into account. Our attempt with strategy 3 was to "predict" where the fire would go, and try to actively avoid those squares by adding a large weight to any path that runs through a future fire square. The effects of future-proofing can be seen through the plot: strategy 2 has a $0$ success rate for all $q$ values after $0.6$, our strategy 3 seemed to only reach $0$ at $q = 0.7$.
 
         To further explore and confirm this claim, we generated another graph, this time with more mazes per $q$ value.
         
@@ -307,6 +307,17 @@ We, Ryan Mao and Ethan Febinger, certify that the code and report for this assig
 
 \end{enumerate}
  
+\vfill
+\pagebreak
+\section{Non-Standard Libraries Used}
+
+\begin{enumerate}
+    \item
+        \textit{matplotlib} - Generating and saving graphs.
+    \item
+        \textit{numpy} - arange function to generate equally separated float values between two floats.
+        Was also used for generating curves of best fit, but is omitted from the submitted code.
+\end{enumerate}
 % --------------------------------------------------------------
 %     You don't have to mess with anything below this line.
 % --------------------------------------------------------------

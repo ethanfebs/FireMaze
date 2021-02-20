@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1613793772 "d:/Desktop - HDD/CS440/FireMaze/pdf/project1.tex" "d:/Desktop - HDD/CS440/FireMaze/pdf/project1.pdf" "project1" 1613793774
+["pdflatex"] 1613795085 "d:/Desktop - HDD/CS440/FireMaze/pdf/project1.tex" "d:/Desktop - HDD/CS440/FireMaze/pdf/project1.pdf" "project1" 1613795090
   "../graphs/BFS_AStar_scatter.png" 1613761602 44043 71009c2ca9a854a0477d7cf2cd3a28c0 ""
   "../graphs/reachable_scatter.png" 1613761104 38251 355f4f2045cda860b31e5c5a8e45533e ""
   "../graphs/strategy_1_scatter.png" 1613774972 35073 8940854047b49239ee6d1350be4912ad ""
@@ -69,15 +69,15 @@
   "C:/Users/725ma/AppData/Local/Programs/MiKTeX/tex/latex/l3backend/l3backend-pdftex.def" 1598963834 22152 ffb23687d8fc8d546b055b154274dfd1 ""
   "C:/Users/725ma/AppData/Local/Programs/MiKTeX/tex/latex/newverbs/newverbs.sty" 1599412719 8442 efa4c391b654a94a0d268cc55a8daecd ""
   "C:/Users/725ma/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1463131981 57049 34128738f682d033422ca125f82e5d62 ""
-  "d:/Desktop - HDD/CS440/FireMaze/pdf/project1.aux" 1613793774 327 245ab971d99b85cadbd038253f2a9a75 ""
-  "d:/Desktop - HDD/CS440/FireMaze/pdf/project1.tex" 1613793771 22192 7e7191cba971525d73ed5dd56c98638d ""
-  "project1.aux" 1613793774 327 245ab971d99b85cadbd038253f2a9a75 "pdflatex"
-  "project1.tex" 1613793771 22192 7e7191cba971525d73ed5dd56c98638d ""
-  "project1.toc" 1613793774 196 15be544d7b368545b45aba6e1c6bdd1d "pdflatex"
+  "d:/Desktop - HDD/CS440/FireMaze/pdf/project1.aux" 1613795086 441 0b638a90814e92d76b76dc57184d0398 ""
+  "d:/Desktop - HDD/CS440/FireMaze/pdf/project1.tex" 1613795089 22564 7f2435b5946596814c5d98f59004579c ""
+  "project1.aux" 1613795086 441 0b638a90814e92d76b76dc57184d0398 "pdflatex"
+  "project1.tex" 1613795089 22564 7f2435b5946596814c5d98f59004579c ""
+  "project1.toc" 1613795086 269 fd3b29dbd6cb0ec5d942b86d981f8590 "pdflatex"
   (generated)
   "d:/Desktop - HDD/CS440/FireMaze/pdf/project1.pdf"
+  "project1.pdf"
+  "project1.toc"
+  "project1.log"
   "d:/Desktop - HDD/CS440/FireMaze/pdf/project1.log"
   "project1.aux"
-  "project1.log"
-  "project1.toc"
-  "project1.pdf"
