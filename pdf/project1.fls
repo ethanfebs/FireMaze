@@ -82,6 +82,12 @@ INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\sym
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr17.tfm
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
+INPUT d:\Desktop - HDD\CS440\FireMaze\pdf\project1.toc
+INPUT d:\Desktop - HDD\CS440\FireMaze\pdf\project1.toc
+INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
+OUTPUT d:\Desktop - HDD\CS440\FireMaze\pdf\project1.toc
+OUTPUT d:\Desktop - HDD\CS440\FireMaze\pdf\project1.pdf
+INPUT C:\Users\725ma\AppData\Local\MiKTeX\pdftex\config\pdftex.map
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmti12.tfm
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmtt12.tfm
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr8.tfm
@@ -101,8 +107,6 @@ INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\sym
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
-OUTPUT d:\Desktop - HDD\CS440\FireMaze\pdf\project1.pdf
-INPUT C:\Users\725ma\AppData\Local\MiKTeX\pdftex\config\pdftex.map
 INPUT ..\graphs\reachable_scatter.png
 INPUT ..\graphs\reachable_scatter.png
 INPUT ..\graphs\reachable_scatter.png
@@ -113,7 +117,6 @@ INPUT ..\graphs\BFS_AStar_scatter.png
 INPUT ..\graphs\BFS_AStar_scatter.png
 INPUT ..\graphs\BFS_AStar_scatter.png
 INPUT ..\graphs\BFS_AStar_scatter.png
-INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
 INPUT ..\graphs\strategy_1_scatter.png
 INPUT ..\graphs\strategy_1_scatter.png
 INPUT ..\graphs\strategy_1_scatter.png
@@ -124,15 +127,31 @@ INPUT ..\graphs\strategy_2_scatter.png
 INPUT ..\graphs\strategy_2_scatter.png
 INPUT ..\graphs\strategy_2_scatter.png
 INPUT ..\graphs\strategy_2_scatter.png
+INPUT ..\graphs\strategy_3_scatter.png
+INPUT ..\graphs\strategy_3_scatter.png
+INPUT ..\graphs\strategy_3_scatter.png
+INPUT ..\graphs\strategy_3_scatter.png
+INPUT ..\graphs\strategy_3_scatter.png
+INPUT ..\graphs\strategy_3_scatter_dim_20.png
+INPUT ..\graphs\strategy_3_scatter_dim_20.png
+INPUT ..\graphs\strategy_3_scatter_dim_20.png
+INPUT ..\graphs\strategy_3_scatter_dim_20.png
+INPUT ..\graphs\strategy_3_scatter_dim_20.png
 INPUT d:\Desktop - HDD\CS440\FireMaze\pdf\project1.aux
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx12.pfb
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx12.pfb
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi12.pfb
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi12.pfb
+INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi8.pfb
+INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi8.pfb
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr12.pfb
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr12.pfb
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr17.pfb
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr17.pfb
+INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr6.pfb
+INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr6.pfb
+INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy10.pfb
+INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy10.pfb
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy8.pfb
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy8.pfb
 INPUT C:\Users\725ma\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmti12.pfb

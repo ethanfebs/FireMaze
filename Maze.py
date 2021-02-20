@@ -38,7 +38,7 @@ def search_time(search_algo, maze_size: int = 2):
     """
 
     while (True):
-        print("Trying...")
+        # print("Trying...")
         start_time = time.time() # Define start time as current time
         result = search_algo(gen_maze(maze_size, 0.3), (0, 0), (maze_size - 1, maze_size - 1)) # Run algo
         end_time = time.time() # Define end time as current time
@@ -414,7 +414,7 @@ def fire_strategy_3(maze, q, alpha):
     while(agent_pos != (n-1, n-1)):
 
         #call modified AStar to avoid future spread of the fire
-        path = AStar_Modified(maze_f, agent_pos, (n-1, n-1),2,q,fire_start)
+        path = AStar_Modified(maze_f, agent_pos, (n-1, n-1), alpha, q, fire_start)
 
         # End if no path exists from start to goal
         if(not path[0]):
@@ -566,10 +566,10 @@ def AStar_Modified(maze: list, start: tuple, goal: tuple, alpha: float, q: float
     # Some data checking statements
 
     if (not is_valid(start, n)):
-        print("AStar: Start indices outside maze dimensions")
+        print("AStar_Modified: Start indices outside maze dimensions")
         return False
     elif (not is_valid(goal, n)):
-        print("AStar: Goal indices outside maze dimensions")
+        print("AStar_Modified: Goal indices outside maze dimensions")
         return False
 
     # End data checking statements
@@ -652,6 +652,7 @@ def AStar_Modified(maze: list, start: tuple, goal: tuple, alpha: float, q: float
     return (False, [], number_of_nodes_visited) # If the while loop goes out, and the queue is empty, then there is no possible path
 
 if __name__ == "__main__":
+    """Testing the functions"""
     # n = 999
     # maze = gen_maze(n + 1, 0.3)
     # print(maze)
@@ -662,21 +663,21 @@ if __name__ == "__main__":
     
     # print(search_time(AStar, 2750))
 
-    maze = gen_maze(200,0.3)
-    maze_f = gen_fire_maze(maze)
-    # print_maze(maze_f)
-    c1 = 0
-    c2 = 0
-    c3 = 0
-    print('####')
-    for i in range(3000):
-        maze = gen_maze(15,0.3)
-        maze_f = gen_fire_maze(maze)
-        if(fire_strategy_1(maze_f,0.5)):
-            c1 +=1
-        if(fire_strategy_2(maze_f,0.5)):
-            c2 +=1
-        if(fire_strategy_3(maze_f,0.5,1)):
-            c3 +=1
+    # maze = gen_maze(200,0.3)
+    # maze_f = gen_fire_maze(maze)
+    # # print_maze(maze_f)
+    # c1 = 0
+    # c2 = 0
+    # c3 = 0
+    # print('####')
+    # for i in range(3000):
+    #     maze = gen_maze(15,0.3)
+    #     maze_f = gen_fire_maze(maze)
+    #     if(fire_strategy_1(maze_f,0.5)):
+    #         c1 +=1
+    #     if(fire_strategy_2(maze_f,0.5)):
+    #         c2 +=1
+    #     if(fire_strategy_3(maze_f,0.5,1)):
+    #         c3 +=1
     
-    print(c1, c2, c3)
+    # print(c1, c2, c3)

@@ -230,8 +230,65 @@ def generate_strategy_2_plot(iterations: int, maze_size: int, start: tuple = (),
     plt.savefig(f"{figure_save_path}strategy_2_scatter.png")
     plt.show()
 
+def generate_strategy_3_plot(iterations: int, maze_size: int, start: tuple = (), goal: tuple = (), p: float = 0.3, q_start: float = 0, q_stop: float = 1.0, q_step: float = .05, alpha: float = 2):
+    """
+    Generates a plot showing the average success of this strategy for differeing q's.
+    Average is simply calculated as such:
+                      total number of successes
+                  --------------------------------
+                       iterations x iterations
+
+    iterations - for each 'iteration', we generate a valid maze. Then for each valid maze, we generate 'iteration' amount of fire mazes.
+    maze_size - the size of the mazes generated to test.
+    start - the start square represented as an ordered pair. Default is (0, 0).
+    goal - the goal square represented as an ordered pair. Default is (n - 1, n - 1) where n = maze_size.
+    p - the obstacle density. Default is 0.3.
+    q_start - the smallest p value to test (inclusive). Default is 0.
+    q_stop - the largest p value to test (inclusive). Default is 1.
+    q_step - the 'step' between each p-value. Default is .05.
+    alpha - an alpha parameter needed for our modified A* algorithm. Default is 1.
+    """
+    if (not start): # If start is not provided
+        start = (0, 0)
+    if (not goal): # If goal is not provided
+        goal = (maze_size - 1, maze_size - 1)
+    
+    q_values = numpy.arange(q_start, q_stop + q_step, q_step) # Generate q values
+    prob_successes = [] # Create a list to store the average differences
+    for q in q_values: # Loop through q values
+        total_successes = 0 # Keep track of number of successes
+        for i in range(iterations):
+            maze = Maze.gen_maze(maze_size, p)
+            while (not Maze.reachable(maze, start, goal)):
+                maze = Maze.gen_maze(maze_size, p)
+            for j in range(iterations):
+                (f_maze, fire_start) = Maze.gen_fire_maze(maze)
+                while (not Maze.reachable(maze, start, fire_start)):
+                    (f_maze, fire_start) = Maze.gen_fire_maze(maze)
+                # print(f"{q}, {i}, {j}")
+                result = Maze.fire_strategy_3(f_maze, q, alpha)
+                if (result):
+                    total_successes += 1
+
+        prob_successes.append(total_successes / (iterations * iterations))
+    
+    # Now that we have data, we plot and save the figure
+    # Scatter plot
+    plt.figure(figsize = figure_size)
+    plt.scatter(q_values, prob_successes, label = "Average Successes", color = "mediumspringgreen")
+    plt.xlabel("q-values")
+    plt.ylabel("Average Successes")
+    plt.locator_params(nbins = 20)
+    plt.title("Average Successes of Strategy 3 as q Increases")
+    plt.legend(loc = "best")
+    plt.grid()
+    plt.savefig(f"{figure_save_path}strategy_3_scatter.png")
+    plt.show()
+
+
 if __name__ == "__main__":
     """ These functions overwrite the existing graphs. Run them with caution. """
     # generate_reachable_plot(100, 100, p_step = 0.01)
     # generate_BFS_AStar_plot(100, 100, p_step = 0.01)
     # generate_strategy_2_plot(10, 100)
+    generate_strategy_3_plot(20, 20)

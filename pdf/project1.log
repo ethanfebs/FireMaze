@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.9.20)  19 FEB 2021 21:06
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.9.20)  19 FEB 2021 22:58
 entering extended mode
 **"d:/Desktop - HDD/CS440/FireMaze/pdf/project1.tex"
 ("d:/Desktop - HDD/CS440/FireMaze/pdf/project1.tex"
@@ -249,52 +249,68 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 77.
  (C:\Users\725ma\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1
+) ("d:/Desktop - HDD\CS440\FireMaze\pdf\project1.toc")
+\tf@toc=\write4
+\openout4 = `project1.toc'.
+
+ [1
 
 {C:/Users/725ma/AppData/Local/MiKTeX/pdftex/config/pdftex.map}]
-<../graphs/reachable_scatter.png, id=10, 770.3982pt x 433.62pt>
-File: ../graphs/reachable_scatter.png Graphic file (type png)
-<use ../graphs/reachable_scatter.png>
-Package pdftex.def Info: ../graphs/reachable_scatter.png  used on input line 110.
-(pdftex.def)             Requested size: 462.24248pt x 260.17401pt.
-
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
 Make it at least 14.49998pt.
 We now make it that large for the rest of the document.
 This may cause the page layout to be inconsistent, however.
 
-[2 <../graphs/reachable_scatter.png>]
-<../graphs/BFS_AStar_scatter.png, id=17, 770.3982pt x 433.62pt>
+[2]
+<../graphs/reachable_scatter.png, id=14, 770.3982pt x 433.62pt>
+File: ../graphs/reachable_scatter.png Graphic file (type png)
+<use ../graphs/reachable_scatter.png>
+Package pdftex.def Info: ../graphs/reachable_scatter.png  used on input line 127.
+(pdftex.def)             Requested size: 462.24248pt x 260.17401pt.
+ [3 <../graphs/reachable_scatter.png>]
+<../graphs/BFS_AStar_scatter.png, id=20, 770.3982pt x 433.62pt>
 File: ../graphs/BFS_AStar_scatter.png Graphic file (type png)
 <use ../graphs/BFS_AStar_scatter.png>
-Package pdftex.def Info: ../graphs/BFS_AStar_scatter.png  used on input line 134.
+Package pdftex.def Info: ../graphs/BFS_AStar_scatter.png  used on input line 149.
 (pdftex.def)             Requested size: 462.24248pt x 260.17401pt.
- [3 <../graphs/BFS_AStar_scatter.png>] [4]
-<../graphs/strategy_1_scatter.png, id=25, 770.3982pt x 433.62pt>
+ [4 <../graphs/BFS_AStar_scatter.png>] [5]
+<../graphs/strategy_1_scatter.png, id=28, 770.3982pt x 433.62pt>
 File: ../graphs/strategy_1_scatter.png Graphic file (type png)
 <use ../graphs/strategy_1_scatter.png>
-Package pdftex.def Info: ../graphs/strategy_1_scatter.png  used on input line 178.
+Package pdftex.def Info: ../graphs/strategy_1_scatter.png  used on input line 196.
 (pdftex.def)             Requested size: 462.24248pt x 260.17401pt.
- [5 <../graphs/strategy_1_scatter.png>]
-<../graphs/strategy_2_scatter.png, id=30, 770.3982pt x 433.62pt>
+ [6 <../graphs/strategy_1_scatter.png>]
+<../graphs/strategy_2_scatter.png, id=33, 770.3982pt x 433.62pt>
 File: ../graphs/strategy_2_scatter.png Graphic file (type png)
 <use ../graphs/strategy_2_scatter.png>
-Package pdftex.def Info: ../graphs/strategy_2_scatter.png  used on input line 198.
+Package pdftex.def Info: ../graphs/strategy_2_scatter.png  used on input line 216.
 (pdftex.def)             Requested size: 462.24248pt x 260.17401pt.
- [6 <../graphs/strategy_2_scatter.png>] [7] ("d:/Desktop - HDD\CS440\FireMaze\pdf\project1.aux") ) 
+ [7 <../graphs/strategy_2_scatter.png>] [8]
+<../graphs/strategy_3_scatter.png, id=45, 770.3982pt x 433.62pt>
+File: ../graphs/strategy_3_scatter.png Graphic file (type png)
+<use ../graphs/strategy_3_scatter.png>
+Package pdftex.def Info: ../graphs/strategy_3_scatter.png  used on input line 264.
+(pdftex.def)             Requested size: 462.24248pt x 260.17401pt.
+ [9 <../graphs/strategy_3_scatter.png>]
+<../graphs/strategy_3_scatter_dim_20.png, id=50, 770.3982pt x 433.62pt>
+File: ../graphs/strategy_3_scatter_dim_20.png Graphic file (type png)
+<use ../graphs/strategy_3_scatter_dim_20.png>
+Package pdftex.def Info: ../graphs/strategy_3_scatter_dim_20.png  used on input line 278.
+(pdftex.def)             Requested size: 462.24248pt x 260.17401pt.
+ [10 <../graphs/strategy_3_scatter_dim_20.png>] [11] ("d:/Desktop - HDD\CS440\FireMaze\pdf\project1.aux") ) 
 Here is how much of TeX's memory you used:
- 3991 strings out of 481199
- 54364 string characters out of 2905595
- 307093 words of memory out of 3000000
- 19552 multiletter control sequences out of 15000+200000
+ 4008 strings out of 481199
+ 54906 string characters out of 2905595
+ 306116 words of memory out of 3000000
+ 19564 multiletter control sequences out of 15000+200000
  544060 words of font info for 64 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,12n,45p,913b,314s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on "d:/Desktop - HDD\CS440\FireMaze\pdf\project1.pdf" (7 pages, 220183 bytes).
+ 36i,12n,45p,913b,316s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/725ma/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on "d:/Desktop - HDD\CS440\FireMaze\pdf\project1.pdf" (11 pages, 313809 bytes).
 PDF statistics:
- 63 PDF objects out of 1000 (max. 8388607)
+ 91 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 31 words of extra memory for PDF output out of 10000 (max. 10000000)
 
