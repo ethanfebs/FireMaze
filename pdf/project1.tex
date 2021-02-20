@@ -29,7 +29,7 @@
 % -------------------------------------------------------------
 % Setup constants 
 % -------------------------------------------------------------
-\newcommand{\name}{Ethan Febinger, Ryan Mao}
+\newcommand{\name}{Ethan Febinger, Ryan Mao \\ NetIDs: eef45, rym15}
 \newcommand{\class}{CS 440: Intro to AI}
 \newcommand{\hwTitle}{Project 1} % Change this for a new homework
 \newcommand{\due}{February 19, 2021} % Change this for a new homework
@@ -75,6 +75,16 @@
 \date{\due}
  
 \maketitle
+
+\section{Integrity}
+
+We, Ryan Mao and Ethan Febinger, certify that the code and report for this assignment are our work alone.
+
+\section{Work Division}
+\\
+Ryan Mao: Problems 1-4, 6
+\\
+Ethan Febinger: Problems 5, 7, 8
 
 \section{Preliminaries}
 \begin{enumerate}
@@ -214,15 +224,35 @@
 \section{Fire Maze}
 \begin{enumerate}
     \setcounter{enumi}{4}
-    \item 
-        \textit{Describe your improved Strategy 3.  How does it account for the unknown future?}
-        
+
+    \item \textit{Describe your improved strategy 3. How does it account for the unknown future?}
+
         \vspace{4mm}
-        Our strategy 3 accounts for the unknown future by incentivising $A^*$ to find paths that stay away from where the fire will spread in the future. Similar to strategy 2, this algorithm recomputes $A^*$ at every timestep to use the most up to date information on where the fire has spread. 
-        
-        \vspace{4mm}
-        Our modified $A^*$ function \cverb|AStar_Modified| calls the function \\ 
-        \cverb|advance_fire_probability|. This returns a copy of the maze that stores the probability that each empty cell will be set on fire in the next given turn. Then, this probability is added to the cost of traveling to the cell. By increasing the cost of traveling to such cells, we are discouraging our $A^*$ algorithm from choosing paths that travel nearby the fire. This helps the agent avoid the fire spreading into it while it is traversing the maze, which increases the probability of success.
+    
+    Our strategy 3 accounts for the unknown future by incentivising $A^*$ to find paths that stay away from where the fire is about to spread. Similar to strategy 2, this algorithm recomputes $A^*$ at every timestep to use the most up to date information on where the fire has spread. Instead of having a uniform cost of 1 to travel to any neighboring cell, we increase the cost of traveling to a cell that may be set on fire in the next turn.
+    
+    \vspace{4mm}
+    Our modified $A^*$ function \cverb|AStar_Modified| calls the function \cverb|advance_fire_probability|. This function is sent a copy of the current state of the maze. The maze is stored as a nested list where $0$ represents an empty cell, $1$ represents a barrier cell, and $2$ represents a cell that is on fire. \cverb|advance_fire_probability| iterates through each cell of the maze and changes the value of each empty cell from 0 to the probability it will be set on fire in the next turn. This is calculated by the given formula $1-(1-q)^k$. After this is computed for each cell, the function returns the altered form of the maze.
+    
+    \vspace{4mm}
+    In \cverb|AStar_Modified|, the cost to move to a given cell $(i,j)$ is $1+\alpha *$ maze\_future$[i,j]$ where maze\_future is the modified list obtained from \cverb|advance_fire_probability| and $\alpha$ is a parameter we can adjust to change how aggressively the agent avoids fire. We found $\alpha = 1$ worked best. By increasing the cost, we are discouraging our $A^*$ algorithm from choosing paths that travel nearby the fire. This helps the agent avoid the fire spreading into it while it is traversing the maze, which increases the probability of success.
+    
+    \item \textit{Plot,  for  Strategy  1,  2,  and  3,  a  graph  of  ‘average  strategy  success  rate’  vs  ‘flammability q’ at p= 0.3.  Where do the different strategies perform the same?  Where do they perform differently?Why?}
+    
+    \item \textit{If you had unlimited computational resources at your disposal, how could you improve on Strategy 3?}
+    
+    \vspace{4mm}
+    Currently our algorithm accounts for the spread of the fire one timestep into the future. Given unlimited computational resources, we could calculate the probability that a cell will be set on fire for any given timestep in the future. We could then update the cost of traveling to any given cell at any given timestep accordingly. This would allow the agent to look far into the future to avoid areas of the maze where the fire might spread.  
+    
+    \item \textit{If you could only take ten seconds between moves (rather than doing as much computations as you like), how would that change your strategy?  Describe such a potential Strategy 4.}
+    
+    
+    \vspace{4mm}
+    For our current strategy, we are iterating through every point in the maze to determine the probability that the fire will spread to any given cell in the near future. This could be too computationally expensive for a time frame of ten seconds between moves. 
+    
+    \vspace{4mm}
+    A simpler alternative would be to implement a  easy to compute heuristic that would give the agent an idea of how close any given cell is to the fire. This could be achieved by measuring the euclidean distance from a given cell to the starting point of the fire. Then, the cost of moving to any given cell could be increased by a function of this amount. A function such as $f(x)=e^{-x^2}$ would be ideal for this because it increases as $x$ approaches $0$ and goes to $0$ as $x$ approaches infinity. This strategy does not tell the agent of the current location of the fire, but it gives the agent an idea of the general region the fire belongs to and encourages the agent to stay away from this area.
+
 \end{enumerate}
  
 % --------------------------------------------------------------

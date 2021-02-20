@@ -397,6 +397,7 @@ def fire_strategy_2(maze, q):
 def fire_strategy_3(maze, q, alpha):
     """
     Recalculate the shortest path through the fire at each timestep
+
     Return false if agent touches fire cell on path
     Returns true otherwise
 
@@ -408,14 +409,11 @@ def fire_strategy_3(maze, q, alpha):
     timestep = 0
     maze_f = copy.deepcopy(maze)
     agent_pos = (0, 0)
-
-    for i in range(n):
-        for j in range(n):
-            if(maze[i][j]==2):
-                fire_start = (i,j)
+    fire_start = (0,0)
 
     while(agent_pos != (n-1, n-1)):
 
+        #call modified AStar to avoid future spread of the fire
         path = AStar_Modified(maze_f, agent_pos, (n-1, n-1),2,q,fire_start)
 
         # End if no path exists from start to goal
@@ -625,7 +623,8 @@ def AStar_Modified(maze: list, start: tuple, goal: tuple, alpha: float, q: float
                     continue
                 # Check to see if this path is better (just need to check g_cost since h_cost is always the same)
                 possible_g_cost = g_cost[current[0]][current[1]] + 1
-                #increase cost of moving to a node if there is a probability it will be on fire next turn
+
+                #KEY MODIFICATION: Increase cost of moving to a node if there is a probability it will be on fire next turn
                 possible_g_cost += alpha*maze_future[possible[0]][possible[1]]
                 if (possible_g_cost <  g_cost[possible[0]][possible[1]]): # If the cost is indeed less
                     previous[possible[0]][possible[1]] = current
@@ -681,14 +680,3 @@ if __name__ == "__main__":
             c3 +=1
     
     print(c1, c2, c3)
-
-    # print(f"BFS with length of: {len(BFS_result)} and # of nodes visited: {BFS_number_of_nodes_visited}\nLength of path: {len(BFS_result)}")
-    # print(f"AStar with length of: {len(AStar_result)} and # of nodes visited: {AStar_number_of_nodes_visited}\nLength of path: {len(AStar_result)}")
-    # for i in range(10):
-    #     maze = advance_fire_one_step(maze, 0.5)
-    #     print("ITERATION ", i)
-    #     print_maze(maze)
-
-    # Questions to resolve later
-    #   should we allow fire at the start and/or goal?
-    #   should we implement option for player to "stay in same place"?
